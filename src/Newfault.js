@@ -1,52 +1,62 @@
 import React, { Component } from 'react';
+import Button from "react-bootstrap/Button"
+import axios from 'axios'; 
 
 export class Newfault extends Component {
 
   constructor(props){
     super(props);
-  this.state = {
-    firstname:'',
-    email:'',
-    lastname:'',
-    phone:'',
-    project:'',
-    building:'',
-    apartment:'',
-    sort:'',
-    tresc:'',
-    sent: '',
-    error:''
-
-  };
-  this.onFormSubmit = this.onFormSubmit.bind(this);
-}
-onFormSubmit(e){
-  e.preventDefault();
-  alert("test");
-  const scriptUrl = 'https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec';
-  const url = `${scriptUrl}?callback=ctrlq&name=${this.state.name}&email=${this.state.email}`;
-  fetch(url, {mode: 'no-cors'}).then(
-    () => { this.setState({ sent: true }); },
-    () => { this.setState({ error: true }); }
-  );
-  console.log(this.state.error);
-  console.log(this.state.sent);
-}
+    this.state = {
+      firstname:'',
+      email:'',
+      lastname:'',
+      phone:'',
+      project:'',
+      building:'',
+      apartment:'',
+      sort:'',
+      tresc:'',
+      sent: '',
+      error:'',
+      file: ''
+    };
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+  }
+  onFormSubmit(e){
+    e.preventDefault();
+    alert("test");
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec';
+    const url = `${scriptUrl}?callback=ctrlq&name=${this.state.name}&email=${this.state.email}`;
+    fetch(url, {mode: 'no-cors'}).then(
+      () => { this.setState({ sent: true }); },
+      () => { this.setState({ error: true }); }
+    );
+    console.log(this.state.error);
+    console.log(this.state.sent);
+  }
   handleChange(e){
     e.preventDefault();
-  
+    let name = e.target.name;
+    let value = e.target.value;
     
-    this.setState({[e.target.name]:[e.target.value]});
+    if (e.target.type === "file") {
+      value = e.target.files[0];
+      console.log(value);
+    } 
+    this.setState({[name]:value});
+    
+    console.log(this.state);
   
-  
-    console.log(this.state.firstname);
-  
+  }
+  debug = () => {
+    console.log("Debug", this.state)
+    const fd = new FormData();
+    fd.append('image', this.state.file, this.state.file.name);
+    axios.post("https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec", fd)
+    .then(r => console.log("file upload successful"));
   }
   render() {
       //wyśietlanie listy projektów
-     
-      
-
       return (
         <div className="container">
           <div className="row justify-content-md-center">
@@ -99,9 +109,13 @@ onFormSubmit(e){
        
          <div className="form-group">
 
-      <input type="file" />
+        <input type="file" name="file" onChange={this.handleChange.bind(this)} />
         </div>
         <button type="submit" className="btn btn-primary">Dodaj</button>
+        <br></br>
+        <br></br>
+        
+        <Button onClick={this.debug}>Test uploadu</Button>
         
    </form>
    </div>
