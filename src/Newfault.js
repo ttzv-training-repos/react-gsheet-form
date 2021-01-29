@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from "react-bootstrap/Button"
 import axios from 'axios'; 
+import {app} from './Fire';
 
 export class Newfault extends Component {
 
@@ -18,21 +19,31 @@ export class Newfault extends Component {
       tresc:'',
       sent: '',
       error:'',
-      file: ''
+      file: null
     };
     this.onFormSubmit = this.onFormSubmit.bind(this);
   }
-  onFormSubmit(e){
+  async onFormSubmit(e){
     e.preventDefault();
     alert("test");
+    
+   // const db= app.firestore();
+    const storage = app.storage();
+    const storageRef=storage.ref();
+    const fileref= storageRef.child(this.state.file.name);
+    await fileref.put(this.state.file);
+    //const uploadTask = storage.ref(`/images/`).put(this.state.file);
+    //console.log("obrazek: "+uploadTask);
+    const fileurl=await fileref.getDownloadURL();
+    console.log("obrazek: "+fileurl);
+    console.log(this.state.error);
+    console.log(this.state.sent);
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec';
-    const url = `${scriptUrl}?callback=ctrlq&name=${this.state.name}&email=${this.state.email}`;
+    const url = `${scriptUrl}?callback=ctrlq&name=${this.state.name}&email=${this.state.email}&file=${fileurl}`;
     fetch(url, {mode: 'no-cors'}).then(
       () => { this.setState({ sent: true }); },
       () => { this.setState({ error: true }); }
     );
-    console.log(this.state.error);
-    console.log(this.state.sent);
   }
   handleChange(e){
     e.preventDefault();
@@ -48,6 +59,23 @@ export class Newfault extends Component {
     console.log(this.state);
   
   }
+  fileChangedHandler = (event) => {
+    const file = event.target.files[0]
+  }
+  fileChangedHandler = event => {
+    this.setState({ file: event.target.files[0] })
+  }
+
+  uploadHandler = () => {
+    const formData = new FormData()
+    formData.append(
+      'myFile',
+      this.state.selectedFile,
+      this.state.selectedFile.name
+    )
+    axios.post('my-domain.com/file-upload', formData)
+  }
+
   debug = () => {
     console.log("Debug", this.state)
     const fd = new FormData();
@@ -109,7 +137,7 @@ export class Newfault extends Component {
        
          <div className="form-group">
 
-        <input type="file" name="file" onChange={this.handleChange.bind(this)} />
+        <input type="file" name="file" onChange={this.fileChangedHandler} />
         </div>
         <button type="submit" className="btn btn-primary">Dodaj</button>
         <br></br>
