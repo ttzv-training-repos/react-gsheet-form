@@ -39,7 +39,7 @@ export class Newfault extends Component {
     console.log(this.state.error);
     console.log(this.state.sent);
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec';
-    const url = `${scriptUrl}?callback=ctrlq&name=${this.state.name}&email=${this.state.email}&file=${fileurl}`;
+    const url = `${scriptUrl}?callback=ctrlq&name=${this.state.firstname}&email=${this.state.email}&file=${fileurl}&lastname=${this.state.lastname}&phone=${this.state.phone}&building=${this.state.building}&apartment=${this.state.apartment}&sort=${this.state.sort}&tresc=${this.state.tresc}&project=${this.state.project}`;
     fetch(url, {mode: 'no-cors'}).then(
       () => { this.setState({ sent: true }); },
       () => { this.setState({ error: true }); }
