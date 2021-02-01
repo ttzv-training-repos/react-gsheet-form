@@ -59,22 +59,7 @@ export class Newfault extends Component {
     console.log(this.state);
   
   }
-  fileChangedHandler = (event) => {
-    const file = event.target.files[0]
-  }
-  fileChangedHandler = event => {
-    this.setState({ file: event.target.files[0] })
-  }
 
-  uploadHandler = () => {
-    const formData = new FormData()
-    formData.append(
-      'myFile',
-      this.state.selectedFile,
-      this.state.selectedFile.name
-    )
-    axios.post('my-domain.com/file-upload', formData)
-  }
   checkboxHandler = (e) => {
     let value = e.target.value;
     let issues = this.state.issues;
