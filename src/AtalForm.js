@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios'; 
 import {app} from './Fire';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 
-export class Newfault extends Component {
+export class AtalForm extends Component {
 
   constructor(props){
     super(props);
@@ -74,11 +73,11 @@ export class Newfault extends Component {
   render() {
       return (
         <div className="container w-50">
-          <div className="p-5">
+          <div className="p-5 form-container">
             <Form onSubmit={this.onFormSubmit}>
               <Form.Group>
                 <Form.Label>Inwestycja: *</Form.Label>
-                <Form.Control as="select" size="md" name="project" onChange={this.handleChange.bind(this)}>
+                <Form.Control as="select" size="md" name="project" onChange={this.handleChange.bind(this)} required>
                   <option></option>
                   <option>Nowy Targówek etap I</option>
                   <option>Nowy Targówek etap II</option>
@@ -99,27 +98,27 @@ export class Newfault extends Component {
 
               <Form.Group>
                 <Form.Label>Adres: *</Form.Label>
-                <Form.Control type="text" name="address" onChange={this.handleChange.bind(this)}></Form.Control>
+                <Form.Control type="text" name="address" onChange={this.handleChange.bind(this)} required></Form.Control>
               </Form.Group>
 
               <Form.Group>
                 <Form.Label>Numer budowlany: *</Form.Label>
-                <Form.Control type="text" name="projectno" onChange={this.handleChange.bind(this)}></Form.Control>
+                <Form.Control type="text" name="projectno" onChange={this.handleChange.bind(this)} required></Form.Control>
               </Form.Group>
               
               <Form.Group>
                 <Form.Label>Imię i nazwisko: *</Form.Label>
-                <Form.Control type="text" name="fullname" onChange={this.handleChange.bind(this)}></Form.Control>
+                <Form.Control type="text" name="fullname" onChange={this.handleChange.bind(this)} required></Form.Control>
               </Form.Group>
 
               <Form.Group>
                 <Form.Label>Kontakt telefoniczny: *</Form.Label>
-                <Form.Control type="text" name="phone" onChange={this.handleChange.bind(this)}></Form.Control>
+                <Form.Control type="text" name="phone" onChange={this.handleChange.bind(this)} required></Form.Control>
               </Form.Group>
 
               <Form.Group>
                 <Form.Label>Adres Mail: *</Form.Label>
-                <Form.Control type="email" name="email" onChange={this.handleChange.bind(this)}></Form.Control>
+                <Form.Control type="email" name="email" onChange={this.handleChange.bind(this)} required></Form.Control>
               </Form.Group>
 
               <Form.Group>
@@ -170,7 +169,7 @@ export class Newfault extends Component {
                     - Wszelkie uszkodzenia zgłaszać od razu, a nie jak doprowadzą do dalszej degradacji elementu budynku, instalacji, mieszkania. W przeciwnym wypadku następuje utrata rękojmi. Zapoznałem/łam się z warunkami dotyczącymi wysłania zgłoszenia.
                   </Card.Text>
                   <Form.Group>
-                    <Form.Check label="Potwierdzam zapoznanie się z informacją dotyczącą zgłoszenia. *" name="confirmTerms" onChange={this.handleChange.bind(this)}></Form.Check>
+                    <Form.Check label="Potwierdzam zapoznanie się z informacją dotyczącą zgłoszenia. *" name="confirmTerms" onChange={this.handleChange.bind(this)} required></Form.Check>
                   </Form.Group>
                 </Card.Body>
               </Card>
@@ -185,4 +184,4 @@ export class Newfault extends Component {
       )
   }
 }
-export default Newfault
+export default AtalForm

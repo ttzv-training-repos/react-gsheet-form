@@ -1,11 +1,9 @@
-import logo from './logo.svg';
 import './App.css';
-import New from './Newfault';
+import AtalForm from './AtalForm';
 function App() {
   return (
     <div className="App">
-    
-        <New />
+        <AtalForm />
     </div>
   );
 }
