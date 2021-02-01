@@ -1,0 +1,40 @@
+.main{
+    background-image: url("/src/bg2.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+}
+
+.form-container{
+    background-color: #e9ecef;
+    opacity: 90%;
+    border-radius: 1rem;
+    padding: 1rem;
+    max-width: 660px;
+    border: 1px solid silver;
+}
+
+.form-control{
+    border-radius: 1rem!important;
+}
+
+.btn-primary{
+    background-color: #373737!important;
+    border-color: #373737!important;
+    border-radius: 4rem!important;
+}
+
+.btn-primary:hover{
+    background-color: transparent!important;
+    border-color: red!important;
+    color: red!important;
+}
+
+.card-info{
+    font-size: 0.75rem;
+    max-height: 15rem;
+    overflow: auto;
+    padding-right: 1rem;
+}
