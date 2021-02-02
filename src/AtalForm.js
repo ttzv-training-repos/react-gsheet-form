@@ -4,6 +4,7 @@ import './AtalForm.css';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
+import {FormErrors} from './FormErrors'
 
 export class AtalForm extends Component {
 
@@ -21,9 +22,14 @@ export class AtalForm extends Component {
       customerDate:'',
       file: null,
       fileurl: '',
+      formErrors: {email: '', phone: ''},
+      emailValid: false,
+      phoneValid: false,
+      formValid: false,
       confirmTermsDisabled: true
     };
   }
+
 
   generateUrl(params) {
     let baseScriptURL = 'https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec?callback=ctrlq';
@@ -69,11 +75,40 @@ export class AtalForm extends Component {
       value = e.target.files[0];
       console.log(value);
     } 
-    this.setState({[name]:value});
+    this.setState({[name]:value},() => { this.validateField(name, value) });
     
     console.log(this.state);
   
   }
+  validateField(fieldName, value) {
+    let fieldValidationErrors = this.state.formErrors;
+    let emailValid = this.state.emailValid;
+    let phoneValid = this.state.phoneValid;
+  
+    switch(fieldName) {
+      case 'email':
+        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        fieldValidationErrors.email = emailValid ? '' : ' nie poprawny adres';
+        break;
+      case 'phone':
+        const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{1,6}$/im;
+        phoneValid = value.match(regex)
+        fieldValidationErrors.phone = phoneValid ? '': ' nie poprawny numer';
+        break;
+      default:
+        break;
+    }
+    this.setState({formErrors: fieldValidationErrors,
+                    emailValid: emailValid,
+                    phoneValid: phoneValid
+                  }, this.validateForm);
+  }
+  
+  validateForm() {
+    this.setState({formValid: this.state.emailValid && this.state.phoneValid});
+  }
+  
+
 
   checkboxHandler = (e) => {
     let value = e.target.value;
@@ -139,13 +174,24 @@ export class AtalForm extends Component {
                 <Form.Group controlId="phone">
                   <Form.Label>Kontakt telefoniczny: *</Form.Label>
                   <Form.Control type="text" name="phone" onChange={this.handleChange} required></Form.Control>
+                  <Form.Text className="text-mute">
+                  <div className="panel panel-default">
+ <FormErrors formErrors={this.state.formErrors.phone} />
+</div>
+</Form.Text>
                 </Form.Group>
-
+                
+                
                 <Form.Group controlId="email">
                   <Form.Label>Adres email: *</Form.Label>
                   <Form.Control type="email" name="email" onChange={this.handleChange} required></Form.Control>
+                  <Form.Text className="text-mute">
+                  <div className="panel panel-default">
+ <FormErrors formErrors={this.state.formErrors.email} />
+</div>
+    </Form.Text>
                 </Form.Group>
-
+                
                 <div>
                   <div className="mb-2">Kategoria problemu</div>
                   {["Wentylacja",
@@ -209,8 +255,8 @@ export class AtalForm extends Component {
                     </Card.Footer>
                   </Card.Body>
                 </Card>
-
-                <Button variant="primary" type="submit">
+                
+                <Button variant="primary" type="submit" disabled={!this.state.formValid}>
                   Wyślij zgłoszenie
                 </Button>
               </Form>

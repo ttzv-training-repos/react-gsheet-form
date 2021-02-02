@@ -6,7 +6,10 @@
     display: flex;
     justify-content: center;
 }
-
+.text-mute {
+    font-size: 80% !important;
+    color: red !important;
+  }
 .form-container{
     background-color: #e9ecef;
     opacity: 90%;
