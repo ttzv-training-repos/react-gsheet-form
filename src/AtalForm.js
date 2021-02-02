@@ -29,7 +29,6 @@ export class AtalForm extends Component {
       customerDate:'',
       file: null,
       fileurl: '',
-      confirmTermsDisabled: true,
       loading: false,
       formErrors: {email: '', phone: ''},
       emailValid: false,
@@ -148,6 +147,15 @@ export class AtalForm extends Component {
     }
   }
 
+  tryPost = () => {
+    fetch('https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec',{
+      method: 'POST',
+      body: JSON.stringify({
+        test: "testowypost"
+      })
+    }).then(response => console.log(response.json().then(console.log)));
+  }
+
   render() {
       return (
         <div className="main">
@@ -195,9 +203,9 @@ export class AtalForm extends Component {
                   <Form.Control type="text" name="phone" onChange={this.handleChange} required></Form.Control>
                   <Form.Text className="text-mute">
                   <div className="panel panel-default">
- <FormErrors formErrors={this.state.formErrors.phone} />
-</div>
-</Form.Text>
+                    <FormErrors formErrors={this.state.formErrors.phone} />
+                  </div>
+                  </Form.Text>
                 </Form.Group>
                 
                 
@@ -205,10 +213,10 @@ export class AtalForm extends Component {
                   <Form.Label>Adres email: *</Form.Label>
                   <Form.Control type="email" name="email" onChange={this.handleChange} required></Form.Control>
                   <Form.Text className="text-mute">
-                  <div className="panel panel-default">
- <FormErrors formErrors={this.state.formErrors.email} />
-</div>
-    </Form.Text>
+                    <div className="panel panel-default">
+                     <FormErrors formErrors={this.state.formErrors.email} />
+                    </div>
+                  </Form.Text>
                 </Form.Group>
                 
                 <div>
@@ -282,6 +290,10 @@ export class AtalForm extends Component {
                   <ClipLoader loading={this.state.loading} css={override} size={30} />
                 </div>
               </Form>
+
+              <Button onClick={this.tryPost}>
+                Test POST
+              </Button>
             </div>
           </div>
         </div>
