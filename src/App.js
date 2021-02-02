@@ -1,6 +1,10 @@
 import './App.css';
 import logo from './logo.png'
 import AtalForm from './AtalForm';
+
+// React Notification
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer } from 'react-notifications';
 function App() {
   return (
     <div>
@@ -11,6 +15,7 @@ function App() {
         <h3>Zgłoszenie serwisowe</h3>
       </div>
       <AtalForm />
+      <NotificationContainer />
     </div>
   );
 }

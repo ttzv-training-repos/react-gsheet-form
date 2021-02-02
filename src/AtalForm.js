@@ -4,6 +4,13 @@ import './AtalForm.css';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
+import { NotificationManager } from "react-notifications";
+import { css } from "@emotion/core";
+import ClipLoader from "react-spinners/ClipLoader";
+
+const override = css`
+  display: block;
+`;
 
 export class AtalForm extends Component {
 
@@ -21,58 +28,67 @@ export class AtalForm extends Component {
       customerDate:'',
       file: null,
       fileurl: '',
-      confirmTermsDisabled: true
+      confirmTermsDisabled: true,
+      loading: false
     };
   }
 
   generateUrl(params) {
-    let baseScriptURL = 'https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec?callback=ctrlq';
+    let baseScriptURL = 'https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec?callback=ctrlq&';
     let paramsString = params.map(p => `${p}=${this.state[p]}`).join("&");
     return `${baseScriptURL}${paramsString}`;
   }
 
   async firebaseUpload(){
-    const storage = app.storage();
-    const storageRef=storage.ref();
-    const fileref = storageRef.child(this.state.file.name);
-    await fileref.put(this.state.file);
-    let fileurl = await fileref.getDownloadURL();
-    return fileurl;
+    if(this.state.file){
+      const storage = app.storage();
+      const storageRef=storage.ref();
+      const fileref = storageRef.child(this.state.file.name);
+      await fileref.put(this.state.file);
+      let fileurl = await fileref.getDownloadURL();
+      return fileurl;
+    } else {
+      return "null";
+    }
   }
 
   onFormSubmit = (e) => {
+    this.setState({loading: true});
     e.preventDefault(); 
-    let fileurl = this.firebaseUpload(this.state.file);    
-    this.setState({fileurl: fileurl});
-    let url = this.generateUrl([
-      "project",
-      "address",
-      "projectno",
-      "fullname",
-      "phone",
-      "email",
-      "issues",
-      "issueDesc",
-      "customerDate",
-      "fileurl"
-    ]);
-    fetch(url).then(
-      console.log
-    );
-  }
+    this.firebaseUpload(this.state.file).then( fileurl => {
+      this.setState({fileurl: fileurl});
+      let url = this.generateUrl([
+        "project",
+        "address",
+        "projectno",
+        "fullname",
+        "phone",
+        "email",
+        "issues",
+        "issueDesc",
+        "customerDate",
+        "fileurl"
+      ]);
+      fetch(url).then( response =>{
+        console.log(response.json())
+        this.setState({loading: false});
+        NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 2000);
+        setTimeout(() => {
+          window.location.reload(false);
+        }, 2000);
+      });
+      });    
+    }
 
   handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    
     if (e.target.type === "file") {
       value = e.target.files[0];
       console.log(value);
     } 
     this.setState({[name]:value});
-    
-    console.log(this.state);
-  
+    console.log(this.state); 
   }
 
   checkboxHandler = (e) => {
@@ -156,8 +172,8 @@ export class AtalForm extends Component {
                    "Drzwi wejściowe", 
                    "Rolety", 
                    "Uwagi dotyczące wykończenia ATAL", 
-                   "Części wspólne budynku", 
-                   "Inne:"].map((option, index) => (
+                   "Części wspólne budynku"
+                   ].map((option, index) => (
                     <Form.Group controlId={`check${index}`} key={`check-${index}`}>
                       <Form.Check 
                         className="d-flex justify-content-start" 
@@ -210,9 +226,12 @@ export class AtalForm extends Component {
                   </Card.Body>
                 </Card>
 
-                <Button variant="primary" type="submit">
-                  Wyślij zgłoszenie
-                </Button>
+                <div className="d-flex align-items-center justify-content-between">
+                  <Button variant="primary" type="submit">
+                    Wyślij zgłoszenie
+                  </Button>
+                  <ClipLoader loading={this.state.loading} css={override} size={30} />
+                </div>
               </Form>
             </div>
           </div>
