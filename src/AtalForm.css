@@ -34,7 +34,6 @@
 
 .card-info{
     font-size: 0.75rem;
-    max-height: 15rem;
     overflow: auto;
     padding-right: 1rem;
 }

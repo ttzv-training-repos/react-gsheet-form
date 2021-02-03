@@ -39,7 +39,6 @@ export class AtalForm extends Component {
       phoneValid: false,
       formValid: false,
       formShow: true,
-      confirmTermsDisabled: true
     };
   }
 
@@ -71,11 +70,7 @@ async getUrl(item, i){
       await fileref.child(extension).put(item.file3);
       this.setState({file3: extension});
       }
- // await fileref.child("file2").put(item.file2);
- // await fileref.child("file3").put(item.file3);
-  console.log(fileref.child(extension).getDownloadURL());
-  //console.log(fileref.getDownloadURL());
-  //return await fileref.child("file1").getDownloadURL();
+
   return await number;
 }
   
@@ -110,14 +105,9 @@ async getUrl(item, i){
         "file2",
         "file3"
       ]);
-      console.log(url);
-      fetch(url).then( response =>{
-        console.log(response.json())
+      fetch(url).then( () =>{
         this.setState({loading: false});
         NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 2000);
-    //   setTimeout(() => {
-    //  window.location.reload(false);
-    //   }, 2000);
       });
       });    
     }
@@ -139,13 +129,9 @@ async getUrl(item, i){
       }
       this.setState({[this.state.file]:tablefile});
      
-      console.log(value);
     } else{
-
-    
-    this.setState({[name]:value},() => { this.validateField(name, value) });
+      this.setState({[name]:value},() => { this.validateField(name, value) });
     }
-    console.log(this.state);
   
   }
   validateField(fieldName, value) {
@@ -176,8 +162,6 @@ async getUrl(item, i){
     this.setState({formValid: this.state.emailValid && this.state.phoneValid});
   }
   
-
-
   checkboxHandler = (e) => {
     let value = e.target.value;
     let issues = this.state.issues;
@@ -187,23 +171,6 @@ async getUrl(item, i){
       issues.push(value);
     }
     this.setState({issues: issues});
-    console.log(this.state);
-  }
-
-  handleScroll = (e) => {
-    let element = e.target;
-    if (element.scrollHeight - element.scrollTop === element.clientHeight){
-      this.setState({confirmTermsDisabled: false});
-    }
-  }
-
-  tryPost = () => {
-    fetch('https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec',{
-      method: 'POST',
-      body: JSON.stringify({
-        test: "testowypost"
-      })
-    }).then(response => console.log(response.json().then(console.log)));
   }
 
   render() {
@@ -327,7 +294,7 @@ async getUrl(item, i){
                 <Card className="mb-1">
                   <Card.Body>
                     <Card.Title>Informacje</Card.Title>
-                    <Card.Text className="card-info" onScroll={this.handleScroll}>
+                    <Card.Text className="card-info">
                       Deweloper informuje, że : 
                       <br></br>  
                       <br></br>                                                                       
@@ -344,23 +311,19 @@ async getUrl(item, i){
                     </Card.Text>
                     <Card.Footer>
                     <Form.Group controlId="confirmTerms">
-                      <Form.Check label="Potwierdzam zapoznanie się z informacją dotyczącą zgłoszenia. *" name="confirmTerms" onChange={this.handleChange} required disabled={this.state.confirmTermsDisabled}></Form.Check>
+                      <Form.Check label="Potwierdzam zapoznanie się z informacją dotyczącą zgłoszenia. *" name="confirmTerms" onChange={this.handleChange} required></Form.Check>
                     </Form.Group>
                     </Card.Footer>
                   </Card.Body>
                 </Card>
 
                 <div className="d-flex align-items-center justify-content-between">
-                  <Button variant="primary" type="submit" disabled={!this.state.formValid}>
+                  <Button variant="primary" type="submit" readonly={!this.state.formValid}>
                     Wyślij zgłoszenie
                   </Button>
                   <ClipLoader loading={this.state.loading} css={override} size={30} />
                 </div>
               </Form>
-
-              <Button onClick={this.tryPost}>
-                Test POST
-              </Button>
             </div>
           </div>
         </div>
