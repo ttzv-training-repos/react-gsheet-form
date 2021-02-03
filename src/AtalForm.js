@@ -29,9 +29,9 @@ export class AtalForm extends Component {
       customerDate:'',
       file: {file1: null, file2: null,file2: null},
       fileold: null,
-      file1: false,
-      file2: false,
-      file3: false,
+      file1: "",
+      file2: "",
+      file3: "",
       fileurl: '',
       confirmTermsDisabled: true,
       loading: false,
@@ -39,6 +39,7 @@ export class AtalForm extends Component {
       emailValid: false,
       phoneValid: false,
       formValid: false,
+      formShow: true,
       confirmTermsDisabled: true
     };
   }
@@ -56,20 +57,24 @@ async getUrl(item, i){
   var number= Math.round(Math.random() * 1000000000);
   const fileref = storageRef.child(number.toString());
   if  (item.file1!=null){
-  await fileref.child("file1").put(item.file1);
-  this.setState({file1: true});
+    //var filename=item.file1.value.toString();
+    var extension="file1."+item.file1.name.split('.').pop();
+  await fileref.child(extension).put(item.file1);
+  this.setState({file1: extension});
   }
   if  (item.file2!=null){
-    await fileref.child("file2").put(item.file2);
-    this.setState({file2: true});
+    var extension="file2."+item.file2.name.split('.').pop();
+    await fileref.child(extension).put(item.file2);
+    this.setState({file2: extension});
     }
   if  (item.file3!=null){
-      await fileref.child("file3").put(item.file3);
-      this.setState({file3: true});
+    var extension="file3."+item.file3.name.split('.').pop();
+      await fileref.child(extension).put(item.file3);
+      this.setState({file3: extension});
       }
  // await fileref.child("file2").put(item.file2);
  // await fileref.child("file3").put(item.file3);
-  console.log(fileref.child("file1").getDownloadURL());
+  console.log(fileref.child(extension).getDownloadURL());
   //console.log(fileref.getDownloadURL());
   //return await fileref.child("file1").getDownloadURL();
   return await number;
@@ -86,6 +91,7 @@ async getUrl(item, i){
   }
 
   onFormSubmit = (e) => {
+    this.setState({formShow: false});
     this.setState({loading: true});
     e.preventDefault(); 
     this.firebaseUpload(this.state.file).then( fileurl => {
@@ -110,9 +116,9 @@ async getUrl(item, i){
         console.log(response.json())
         this.setState({loading: false});
         NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 2000);
-      //  setTimeout(() => {
-      //    window.location.reload(false);
-     //   }, 2000);
+    //   setTimeout(() => {
+    //  window.location.reload(false);
+    //   }, 2000);
       });
       });    
     }
@@ -125,7 +131,6 @@ async getUrl(item, i){
       value = e.target.files[0];
       if (e.target.name==="file1"){
         tablefile.file1=value;
-
       }
       if (e.target.name==="file2"){
         tablefile.file2=value;
@@ -194,11 +199,20 @@ async getUrl(item, i){
   }
 
   render() {
+
+    let className = '';
+    let className2 = 'my-5 d-none';
+    if (!this.state.formShow) {
+      className += ' d-none';
+      className2 = 'my-5 h-100 p-3';
+    }
       return (
         <div className="main">
           <div className="container d-flex justify-content-center">
-            <div className="form-container my-5">
-              <Form onSubmit={this.onFormSubmit}>
+         
+            <div className="form-container my-5 ">
+            <div className={className2}><p>Dziękujemy za wysłanie zgłoszenia.</p></div>
+              <Form onSubmit={this.onFormSubmit} className={className}>
                 <Form.Group controlId="project">
                   <Form.Label>Inwestycja: *</Form.Label>
                   <Form.Control as="select" size="md" name="project" onChange={this.handleChange} required>
