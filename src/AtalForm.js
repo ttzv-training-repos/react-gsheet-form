@@ -27,7 +27,11 @@ export class AtalForm extends Component {
       issues:[],
       issueDesc:'',
       customerDate:'',
-      file: null,
+      file: {file1: null, file2: null,file2: null},
+      fileold: null,
+      file1: false,
+      file2: false,
+      file3: false,
       fileurl: '',
       confirmTermsDisabled: true,
       loading: false,
@@ -46,17 +50,39 @@ export class AtalForm extends Component {
     return `${baseScriptURL}${paramsString}`;
   }
 
-  async firebaseUpload(){
-    if(this.state.file){
-      const storage = app.storage();
-      const storageRef=storage.ref();
-      const fileref = storageRef.child(this.state.file.name);
-      await fileref.put(this.state.file);
-      let fileurl = await fileref.getDownloadURL();
-      return fileurl;
-    } else {
-      return "null";
+async getUrl(item, i){
+  const storage = app.storage();
+  const storageRef=storage.ref();
+  var number= Math.round(Math.random() * 1000000000);
+  const fileref = storageRef.child(number.toString());
+  if  (item.file1!=null){
+  await fileref.child("file1").put(item.file1);
+  this.setState({file1: true});
+  }
+  if  (item.file2!=null){
+    await fileref.child("file2").put(item.file2);
+    this.setState({file2: true});
     }
+  if  (item.file3!=null){
+      await fileref.child("file3").put(item.file3);
+      this.setState({file3: true});
+      }
+ // await fileref.child("file2").put(item.file2);
+ // await fileref.child("file3").put(item.file3);
+  console.log(fileref.child("file1").getDownloadURL());
+  //console.log(fileref.getDownloadURL());
+  //return await fileref.child("file1").getDownloadURL();
+  return await number;
+}
+  
+  async firebaseUpload(pliki){
+    let t=false;
+    let filesurl=this.state.fileurl;
+    var files=this.state.file
+    return this.getUrl(files)
+    
+
+  
   }
 
   onFormSubmit = (e) => {
@@ -74,15 +100,19 @@ export class AtalForm extends Component {
         "issues",
         "issueDesc",
         "customerDate",
-        "fileurl"
+        "fileurl",
+        "file1",
+        "file2",
+        "file3"
       ]);
+      console.log(url);
       fetch(url).then( response =>{
         console.log(response.json())
         this.setState({loading: false});
         NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 2000);
-        setTimeout(() => {
-          window.location.reload(false);
-        }, 2000);
+      //  setTimeout(() => {
+      //    window.location.reload(false);
+     //   }, 2000);
       });
       });    
     }
@@ -91,11 +121,26 @@ export class AtalForm extends Component {
     let name = e.target.name;
     let value = e.target.value;
     if (e.target.type === "file") {
+      let tablefile =this.state.file;
       value = e.target.files[0];
+      if (e.target.name==="file1"){
+        tablefile.file1=value;
+
+      }
+      if (e.target.name==="file2"){
+        tablefile.file2=value;
+      }
+      if (e.target.name==="file3"){
+        tablefile.file3=value;
+      }
+      this.setState({[this.state.file]:tablefile});
+     
       console.log(value);
-    } 
-    this.setState({[name]:value},() => { this.validateField(name, value) });
+    } else{
+
     
+    this.setState({[name]:value},() => { this.validateField(name, value) });
+    }
     console.log(this.state);
   
   }
@@ -246,7 +291,15 @@ export class AtalForm extends Component {
 
                 <Form.Group controlId="file">
                   <Form.Label>Dodaj plik</Form.Label>
-                  <Form.Control type="file" name="file" onChange={this.handleChange}></Form.Control>
+                  <Form.Control type="file" name="file1" onChange={this.handleChange}></Form.Control>
+                </Form.Group>
+                <Form.Group controlId="file">
+                  <Form.Label>Dodaj plik 2</Form.Label>
+                  <Form.Control type="file" name="file2" onChange={this.handleChange}></Form.Control>
+                </Form.Group>
+                <Form.Group controlId="file">
+                  <Form.Label>Dodaj plik 3</Form.Label>
+                  <Form.Control type="file" name="file3" onChange={this.handleChange}></Form.Control>
                 </Form.Group>
 
                 <Card className="mb-1">
