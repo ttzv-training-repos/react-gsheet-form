@@ -79,15 +79,12 @@ async getUrl(item, i){
     let filesurl=this.state.fileurl;
     var files=this.state.file
     return this.getUrl(files)
-    
-
-  
   }
 
   onFormSubmit = (e) => {
-    this.setState({formShow: false});
+    this.setState({formValid: false}); // to tylko blokuje przycisk po jego kliknięciu :)
     this.setState({loading: true});
-    e.preventDefault(); 
+    e.preventDefault();
     this.firebaseUpload(this.state.file).then( fileurl => {
       this.setState({fileurl: fileurl});
       let url = this.generateUrl([
@@ -108,6 +105,7 @@ async getUrl(item, i){
       fetch(url).then( () =>{
         this.setState({loading: false});
         NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 2000);
+        this.setState({formShow: false});
       });
       });    
     }
@@ -318,7 +316,7 @@ async getUrl(item, i){
                 </Card>
 
                 <div className="d-flex align-items-center justify-content-between">
-                  <Button variant="primary" type="submit" readonly={!this.state.formValid}>
+                  <Button variant="primary" type="submit" disabled={!this.state.formValid}>
                     Wyślij zgłoszenie
                   </Button>
                   <ClipLoader loading={this.state.loading} css={override} size={30} />
