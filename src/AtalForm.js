@@ -11,20 +11,27 @@ import {FormErrors} from './FormErrors';
 import SimpleSelector from './SimpleSelector';
 
 let city_investment = {
-  Warszawa: ["Nowy Targówek etap I",
-  "Nowy Targówek etap II",
-  "Nowy Targówek etap III",
-  "Nowe Bemowo",
-  "Wilanów etap I",
-  "Wilanów etap II",
-  "Wilanów etap III",
-  "Marina I",
+  Warszawa: ["Marina I",
   "Marina II",
   "Marina III",
   "Marina IV",
+  "Nowy Targówek etap I",
+  "Nowy Targówek etap II",
+  "Nowy Targówek etap III",
+  "Nowe Bemowo",
+  "Nowa Grochowska I",
+  "Nowa Grochowska II ",
+  "Nowa Grochowska III ",
+  "Nowa Grochowska Lokale Inwestycyjne",
   "Nowy Targówek etap IV",
   "Nowy Targówek Lokale Inwestycyjne",
-  "Osiedle Warszawa"],
+  "Centro Ursus"  ,
+  "Osiedle Warszawa I",
+  "Osiedle Warszawa II",
+  "Osiedle Warszawa III ",
+  "Wilanów etap I",
+  "Wilanów etap II",
+  "Wilanów etap III"],
   Poznań: ["c2inv1", "c2inv2", "c2inv3","c2inv4", "c2inv5", "c2inv6"],
 }
 
@@ -202,45 +209,8 @@ async getUrl(item, i){
     }
       return (
         <div className="main">
-          <div className="container d-flex justify-content-center">
-         
+          <div className="container d-flex justify-content-center">     
             <div className="form-container my-5 ">
-<<<<<<< HEAD
-            <div className={className2}><p>Dziękujemy za wysłanie zgłoszenia.</p>
-            </div>
-              <Form onSubmit={this.onFormSubmit} className={className}>
-                <Form.Group controlId="project">
-                  <Form.Label>Inwestycja: *</Form.Label>
-                  <Form.Control as="select" size="md" name="project" onChange={this.handleChange} required>
-                    <option></option>
-                    <option>Marina I</option>
-                    <option>Marina II</option>
-                    <option>Marina III</option>
-                    <option>Marina IV</option>
-                    <option>Nowy Targówek etap I</option>
-                    <option>Nowy Targówek etap II</option>
-                    <option>Nowy Targówek etap III</option>
-                    <option>Nowe Bemowo</option>
-                    <option>Nowa Grochowska I</option>
-                    <option>Nowa Grochowska II </option>
-                    <option>Nowa Grochowska III </option>
-                    <option>Nowa Grochowska Lokale Inwestycyjne</option>
-                    <option>Nowy Targówek etap IV</option>
-                    <option>Nowy Targówek Lokale Inwestycyjne</option>
-                    <option>Centro Ursus</option>  
-                    <option>Osiedle Warszawa I</option>
-                    <option>Osiedle Warszawa II</option>
-                    <option>Osiedle Warszawa III </option>
-                    <option>Wilanów etap I</option>
-                    <option>Wilanów etap II</option>
-                    <option>Wilanów etap III</option>
-                  
-                  </Form.Control>
-                </Form.Group>
-=======
-
-
-
             <div className={className2}><p>Dziękujemy za wysłanie zgłoszenia.</p></div>
               <Form onSubmit={this.onFormSubmit} className={className}>
                 <SimpleSelector options={Object.keys(city_investment)} 
@@ -254,7 +224,6 @@ async getUrl(item, i){
                                 label="Inwestycja: *"
                                 onChange={this.handleChange}
                                 required={true} />
->>>>>>> f37285c7a2eae76a4d4d1af233a8d793cfb77441
 
                 <Form.Group controlId="address">
                   <Form.Label>Adres: *</Form.Label>
