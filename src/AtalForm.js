@@ -7,7 +7,26 @@ import Card from 'react-bootstrap/Card'
 import { NotificationManager } from "react-notifications";
 import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
-import {FormErrors} from './FormErrors'
+import {FormErrors} from './FormErrors';
+import SimpleSelector from './SimpleSelector';
+
+let city_investment = {
+  Warszawa: ["Nowy Targówek etap I",
+  "Nowy Targówek etap II",
+  "Nowy Targówek etap III",
+  "Nowe Bemowo",
+  "Wilanów etap I",
+  "Wilanów etap II",
+  "Wilanów etap III",
+  "Marina I",
+  "Marina II",
+  "Marina III",
+  "Marina IV",
+  "Nowy Targówek etap IV",
+  "Nowy Targówek Lokale Inwestycyjne",
+  "Osiedle Warszawa"],
+  Poznań: ["c2inv1", "c2inv2", "c2inv3","c2inv4", "c2inv5", "c2inv6"],
+}
 
 const override = css`
   display: block;
@@ -18,6 +37,7 @@ export class AtalForm extends Component {
   constructor(props){
     super(props);
     this.state = {
+      city: '',
       project:'',
       address:'',
       projectno:'',
@@ -88,6 +108,7 @@ async getUrl(item, i){
     this.firebaseUpload(this.state.file).then( fileurl => {
       this.setState({fileurl: fileurl});
       let url = this.generateUrl([
+        "city",
         "project",
         "address",
         "projectno",
@@ -140,12 +161,12 @@ async getUrl(item, i){
     switch(fieldName) {
       case 'email':
         emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        fieldValidationErrors.email = emailValid ? '' : ' nie poprawny adres';
+        fieldValidationErrors.email = emailValid ? '' : ' Niepoprawny adres';
         break;
       case 'phone':
         const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{1,6}$/im;
         phoneValid = value.match(regex)
-        fieldValidationErrors.phone = phoneValid ? '': ' nie poprawny numer';
+        fieldValidationErrors.phone = phoneValid ? '': ' Niepoprawny numer';
         break;
       default:
         break;
@@ -184,6 +205,7 @@ async getUrl(item, i){
           <div className="container d-flex justify-content-center">
          
             <div className="form-container my-5 ">
+<<<<<<< HEAD
             <div className={className2}><p>Dziękujemy za wysłanie zgłoszenia.</p>
             </div>
               <Form onSubmit={this.onFormSubmit} className={className}>
@@ -215,6 +237,24 @@ async getUrl(item, i){
                   
                   </Form.Control>
                 </Form.Group>
+=======
+
+
+
+            <div className={className2}><p>Dziękujemy za wysłanie zgłoszenia.</p></div>
+              <Form onSubmit={this.onFormSubmit} className={className}>
+                <SimpleSelector options={Object.keys(city_investment)} 
+                                name="city" 
+                                label="Miasto: *" 
+                                onChange={this.handleChange}
+                                required={true} />
+                                
+                <SimpleSelector options={city_investment[this.state.city]} 
+                                name="project" 
+                                label="Inwestycja: *"
+                                onChange={this.handleChange}
+                                required={true} />
+>>>>>>> f37285c7a2eae76a4d4d1af233a8d793cfb77441
 
                 <Form.Group controlId="address">
                   <Form.Label>Adres: *</Form.Label>
