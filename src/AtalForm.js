@@ -184,26 +184,35 @@ async getUrl(item, i){
           <div className="container d-flex justify-content-center">
          
             <div className="form-container my-5 ">
-            <div className={className2}><p>Dziękujemy za wysłanie zgłoszenia.</p></div>
+            <div className={className2}><p>Dziękujemy za wysłanie zgłoszenia.</p>
+            </div>
               <Form onSubmit={this.onFormSubmit} className={className}>
                 <Form.Group controlId="project">
                   <Form.Label>Inwestycja: *</Form.Label>
                   <Form.Control as="select" size="md" name="project" onChange={this.handleChange} required>
                     <option></option>
-                    <option>Nowy Targówek etap I</option>
-                    <option>Nowy Targówek etap II</option>
-                    <option>Nowy Targówek etap III</option>
-                    <option>Nowe Bemowo</option>
-                    <option>Wilanów etap I</option>
-                    <option>Wilanów etap II</option>
-                    <option>Wilanów etap III</option>
                     <option>Marina I</option>
                     <option>Marina II</option>
                     <option>Marina III</option>
                     <option>Marina IV</option>
+                    <option>Nowy Targówek etap I</option>
+                    <option>Nowy Targówek etap II</option>
+                    <option>Nowy Targówek etap III</option>
+                    <option>Nowe Bemowo</option>
+                    <option>Nowa Grochowska I</option>
+                    <option>Nowa Grochowska II </option>
+                    <option>Nowa Grochowska III </option>
+                    <option>Nowa Grochowska Lokale Inwestycyjne</option>
                     <option>Nowy Targówek etap IV</option>
                     <option>Nowy Targówek Lokale Inwestycyjne</option>
-                    <option>Osiedle Warszawa</option>
+                    <option>Centro Ursus</option>  
+                    <option>Osiedle Warszawa I</option>
+                    <option>Osiedle Warszawa II</option>
+                    <option>Osiedle Warszawa III </option>
+                    <option>Wilanów etap I</option>
+                    <option>Wilanów etap II</option>
+                    <option>Wilanów etap III</option>
+                  
                   </Form.Control>
                 </Form.Group>
 
