@@ -9,7 +9,7 @@ import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 import {FormErrors} from './FormErrors';
 import SimpleSelector from './SimpleSelector';
-
+//comment 
 let city_investment = {
   Warszawa: ["Marina I",
   "Marina II",
