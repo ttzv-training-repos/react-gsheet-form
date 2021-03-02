@@ -12,26 +12,26 @@ import SimpleSelector from './SimpleSelector';
 //comment 
 let city_investment = {
   Warszawa: ["Marina I",
-  "Marina II",
-  "Marina III",
-  "Marina IV",
-  "Nowy Targówek etap I",
-  "Nowy Targówek etap II",
-  "Nowy Targówek etap III",
-  "Nowe Bemowo",
-  "Nowa Grochowska I",
-  "Nowa Grochowska II ",
-  "Nowa Grochowska III ",
-  "Nowa Grochowska Lokale Inwestycyjne",
-  "Nowy Targówek etap IV",
-  "Nowy Targówek Lokale Inwestycyjne",
-  "Centro Ursus"  ,
-  "Osiedle Warszawa I",
-  "Osiedle Warszawa II",
-  "Osiedle Warszawa III ",
-  "Wilanów etap I",
-  "Wilanów etap II",
-  "Wilanów etap III"],
+            "Marina II",
+            "Marina III",
+            "Marina IV",
+            "Nowy Targówek etap I",
+            "Nowy Targówek etap II",
+            "Nowy Targówek etap III",
+            "Nowe Bemowo",
+            "Nowa Grochowska I",
+            "Nowa Grochowska II ",
+            "Nowa Grochowska III ",
+            "Nowa Grochowska Lokale Inwestycyjne",
+            "Nowy Targówek etap IV",
+            "Nowy Targówek Lokale Inwestycyjne",
+            "Centro Ursus",
+            "Osiedle Warszawa I",
+            "Osiedle Warszawa II",
+            "Osiedle Warszawa III ",
+            "Wilanów etap I",
+            "Wilanów etap II",
+            "Wilanów etap III"],
   Poznań: ["c2inv1", "c2inv2", "c2inv3","c2inv4", "c2inv5", "c2inv6"],
 }
 
@@ -64,14 +64,14 @@ export class AtalForm extends Component {
       formErrors: {email: '', phone: ''},
       emailValid: false,
       phoneValid: false,
-      formValid: false,
+      formValid: true,
       formShow: true,
     };
   }
 
 
   generateUrl(params) {
-    let baseScriptURL = 'https://script.google.com/macros/s/AKfycbwNufQV-ndHHeFmduWB0fufFp73MhQr2bsn1F9IP1OVNc997feONoDiRQ/exec?callback=ctrlq&';
+    let baseScriptURL = '';
     let paramsString = params.map(p => `${p}=${this.state[p]}`).join("&");
     return `${baseScriptURL}${paramsString}`;
   }
@@ -109,33 +109,44 @@ async getUrl(item, i){
   }
 
   onFormSubmit = (e) => {
-    this.setState({formValid: false}); // to tylko blokuje przycisk po jego kliknięciu :)
+    // this.setState({formValid: false}); // to tylko blokuje przycisk po jego kliknięciu :)
     this.setState({loading: true});
     e.preventDefault();
-    this.firebaseUpload(this.state.file).then( fileurl => {
-      this.setState({fileurl: fileurl});
-      let url = this.generateUrl([
-        "city",
-        "project",
-        "address",
-        "projectno",
-        "fullname",
-        "phone",
-        "email",
-        "issues",
-        "issueDesc",
-        "customerDate",
-        "fileurl",
-        "file1",
-        "file2",
-        "file3"
-      ]);
-      fetch(url).then( () =>{
-        this.setState({loading: false});
-        NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 2000);
-        this.setState({formShow: false});
-      });
-      });    
+    // this.firebaseUpload(this.state.file).then( fileurl => {
+    //   this.setState({fileurl: fileurl});
+    //   let url = this.generateUrl([
+    //     "city",
+    //     "project",
+    //     "address",
+    //     "projectno",
+    //     "fullname",
+    //     "phone",
+    //     "email",
+    //     "issues",
+    //     "issueDesc",
+    //     "customerDate",
+    //     "fileurl",
+    //     "file1",
+    //     "file2",
+    //     "file3"
+    //   ]);
+    //   fetch(url).then( () =>{
+    //     
+    //     NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 2000);
+    //     this.setState({formShow: false});
+    //   });
+    //   });    
+    let formData = new FormData(e.target);
+    console.log(Object.fromEntries(formData.entries()));
+    fetch("http://localhost:9000/gsheet", {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.text())
+    .then(text => {
+      console.log(text);
+      this.setState({loading: false});
+    });
     }
 
   handleChange = (e) => {
@@ -296,15 +307,7 @@ async getUrl(item, i){
 
                 <Form.Group controlId="file">
                   <Form.Label>Dodaj plik</Form.Label>
-                  <Form.Control type="file" name="file1" onChange={this.handleChange}></Form.Control>
-                </Form.Group>
-                <Form.Group controlId="file">
-                  <Form.Label>Dodaj plik 2</Form.Label>
-                  <Form.Control type="file" name="file2" onChange={this.handleChange}></Form.Control>
-                </Form.Group>
-                <Form.Group controlId="file">
-                  <Form.Label>Dodaj plik 3</Form.Label>
-                  <Form.Control type="file" name="file3" onChange={this.handleChange}></Form.Control>
+                  <Form.Control type="file" multiple name="files" onChange={this.handleChange}></Form.Control>
                 </Form.Group>
 
                 <Card className="mb-1">
