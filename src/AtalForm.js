@@ -9,6 +9,31 @@ import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
 import {FormErrors} from './FormErrors';
 import SimpleSelector from './SimpleSelector';
+//comment 
+let city_investment = {
+  Warszawa: ["Marina I",
+  "Marina II",
+  "Marina III",
+  "Marina IV",
+  "Nowy Targówek etap I",
+  "Nowy Targówek etap II",
+  "Nowy Targówek etap III",
+  "Nowe Bemowo",
+  "Nowa Grochowska I",
+  "Nowa Grochowska II ",
+  "Nowa Grochowska III ",
+  "Nowa Grochowska Lokale Inwestycyjne",
+  "Nowy Targówek etap IV",
+  "Nowy Targówek Lokale Inwestycyjne",
+  "Centro Ursus"  ,
+  "Osiedle Warszawa I",
+  "Osiedle Warszawa II",
+  "Osiedle Warszawa III ",
+  "Wilanów etap I",
+  "Wilanów etap II",
+  "Wilanów etap III"],
+  Poznań: ["ATAL Malta", "Milczańska I", "Milczańska II","Chwaliszewo"],
+}
 
 const override = css`
   display: block;
@@ -19,6 +44,7 @@ export class AtalForm extends Component {
   constructor(props){
     super(props);
     this.state = {
+      city: '',
       project:'',
       address:'',
       projectno:'',
