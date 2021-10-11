@@ -31,7 +31,8 @@ let city_investment = {
   "Osiedle Warszawa III ",
   "Wilanów etap I",
   "Wilanów etap II",
-  "Wilanów etap III"],
+  "Wilanów etap III",
+  "Apartamenty Ostródzka I"],
   Poznań: ["ATAL Malta", "Milczańska I", "Milczańska II","Chwaliszewo"],
 }
 
