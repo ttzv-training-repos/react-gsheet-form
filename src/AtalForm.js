@@ -40,7 +40,7 @@ const override = css`
   display: block;
 `;
 
-const maxTextAreaLength = 500;
+const maxTextAreaLength = 1200;
 const maxFileSizeBytes = 10485760; //10MB 
 
 export class AtalForm extends Component {
@@ -214,10 +214,10 @@ async getUrl(item, i){
   textAreaCounter = () => {
     const currentLength = this.state.issueDesc.length;
     if(currentLength === maxTextAreaLength){
-      return <small id="emailHelp" class="form-text text-mute">{currentLength}/{maxTextAreaLength}</small>;
+      return <small class="form-text text-mute">{currentLength}/{maxTextAreaLength}</small>;
     }
     else {
-      return <small id="emailHelp" class="form-text text-muted">{currentLength}/{maxTextAreaLength}</small>;
+      return <small class="form-text text-muted">{currentLength}/{maxTextAreaLength}</small>;
     }
   }
 
