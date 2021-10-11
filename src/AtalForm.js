@@ -40,7 +40,12 @@ const override = css`
   display: block;
 `;
 
+const maxTextAreaLength = 500;
+const maxFileSizeBytes = 10485760; //10MB 
+
 export class AtalForm extends Component {
+
+ 
 
   constructor(props){
     super(props);
@@ -142,9 +147,15 @@ async getUrl(item, i){
   handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    if (e.target.type === "file") {
-      let tablefile =this.state.file;
+    if (e.target.type === "file") {      
+      let tablefile = this.state.file;
       value = e.target.files[0];
+      if(value.size > maxFileSizeBytes){
+        alert("Maksymalny rozmiar pliku to 10MB");
+        e.target.value = null;
+        console.log(e.target.files)
+        return;
+      }
       if (e.target.name==="file1"){
         tablefile.file1=value;
       }
@@ -198,6 +209,16 @@ async getUrl(item, i){
       issues.push(value);
     }
     this.setState({issues: issues});
+  }
+
+  textAreaCounter = () => {
+    const currentLength = this.state.issueDesc.length;
+    if(currentLength === maxTextAreaLength){
+      return <small id="emailHelp" class="form-text text-mute">{currentLength}/{maxTextAreaLength}</small>;
+    }
+    else {
+      return <small id="emailHelp" class="form-text text-muted">{currentLength}/{maxTextAreaLength}</small>;
+    }
   }
 
   render() {
@@ -287,7 +308,8 @@ async getUrl(item, i){
                 </div>
                 <Form.Group controlId="issueDesc">
                   <Form.Label>Opis usterki</Form.Label>
-                  <Form.Control as="textarea" rows={5} name="issueDesc" onChange={this.handleChange}></Form.Control>
+                  <Form.Control as="textarea" rows={5} name="issueDesc" onChange={this.handleChange} maxlength={`${maxTextAreaLength}`}></Form.Control>
+                  {this.textAreaCounter()}
                 </Form.Group>
 
                 <Form.Group controlId="customerDate">
