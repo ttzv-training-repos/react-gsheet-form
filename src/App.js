@@ -1,11 +1,12 @@
 import './App.css'
-import logo from './logo.png'
-import AtalForm from './AtalForm'
-import React from 'react'
-
 // React Notification
 import 'react-notifications/lib/notifications.css'
+
+import React from 'react'
 import { NotificationContainer } from 'react-notifications'
+
+import logo from './logo.png'
+import AtalForm from './views/AtalForm'
 
 const App = function () {
   return (

@@ -1,18 +1,20 @@
-import React, { useRef, useState } from 'react'
-import app from './constants/Fire'
 import './AtalForm.css'
-import Form from 'react-bootstrap/Form'
+
+import { css } from '@emotion/core'
+import { Formik } from 'formik'
+import React, { useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
+import Form from 'react-bootstrap/Form'
 import { NotificationManager } from 'react-notifications'
-import { css } from '@emotion/core'
 import ClipLoader from 'react-spinners/ClipLoader'
+
 import { FormErrors } from './components/FormErrors'
 import SimpleSelector from './components/SimpleSelector'
-import investments from './constants/investments'
-import { baseSheetURL, maxTextAreaLength } from './constants/config'
 import { issueCategories } from './constants/appConstants'
-import { Formik } from 'formik'
+import { baseSheetURL, maxTextAreaLength } from './constants/config'
+import app from './constants/Fire'
+import investments from './constants/investments'
 import atalFormSchema from './schemas/atalFormSchema'
 
 const override = css`
@@ -23,33 +25,6 @@ const AtalForm = function () {
   const [isFormVisible, setFormVisible] = useState(true)
   const [isLoading, setLoading] = useState(false)
   const formRef = useRef()
-  // constructor(props){
-  //   super(props);
-  //   this.state = {
-  //     city: '',
-  //     project:'',
-  //     address:'',
-  //     projectno:'',
-  //     fullname:'',
-  //     phone:'',
-  //     email:'',
-  //     issues:[],
-  //     issueDesc:'',
-  //     customerDate:'',
-  //     file: {file1: null, file2: null,file2: null},
-  //     fileold: null,
-  //     file1: "",
-  //     file2: "",
-  //     file3: "",
-  //     fileurl: '',
-  //     loading: false,
-  //     formErrors: {email: '', phone: ''},
-  //     emailValid: false,
-  //     phoneValid: false,
-  //     formValid: false,
-  //     formShow: true,
-  //   };
-  // }
 
   const initialValues = {
     city: '',
@@ -65,8 +40,8 @@ const AtalForm = function () {
     files: []
   }
 
-  const generateUrl = (params) => {
-    const paramsString = params.map((p) => `${p}=${this.state[p]}`).join('&')
+  const generateUrl = params => {
+    const paramsString = params.map(p => `${p}=${this.state[p]}`).join('&')
     return `${baseSheetURL}${paramsString}`
   }
 
@@ -95,18 +70,18 @@ const AtalForm = function () {
     return number
   }
 
-  const firebaseUpload = async (pliki) => {
+  const firebaseUpload = async pliki => {
     const t = false
     const filesurl = this.state.fileurl
     const files = this.state.file
     return this.getUrl(files)
   }
 
-  const onFormSubmit = (e) => {
+  const onFormSubmit = e => {
     this.setState({ formValid: false }) // to tylko blokuje przycisk po jego kliknięciu :)
     this.setState({ loading: true })
     e.preventDefault()
-    this.firebaseUpload(this.state.file).then((fileurl) => {
+    this.firebaseUpload(this.state.file).then(fileurl => {
       this.setState({ fileurl })
       const url = this.generateUrl([
         'city',
@@ -204,18 +179,14 @@ const AtalForm = function () {
     if (currentLength === maxTextAreaLength) {
       return (
         <small className="form-text text-mute">
-          {currentLength}
-          /
-          {maxTextAreaLength}
+          {currentLength}/{maxTextAreaLength}
         </small>
       )
     }
 
     return (
       <small className="form-text text-muted">
-        {currentLength}
-        /
-        {maxTextAreaLength}
+        {currentLength}/{maxTextAreaLength}
       </small>
     )
   }
@@ -230,10 +201,12 @@ const AtalForm = function () {
     <div className="main">
       <div className="container d-flex justify-content-center">
         <div className="form-container my-5 ">
-          <div className={className2}><p>Dziękujemy za wysłanie zgłoszenia.</p></div>
+          <div className={className2}>
+            <p>Dziękujemy za wysłanie zgłoszenia.</p>
+          </div>
           <Formik
-            initialValues = {initialValues}
-            onSubmit = {values => console.log(values)}
+            initialValues={initialValues}
+            onSubmit={values => console.log(values)}
             isInitialValid={false}
             innerRef={formRef}
           >
@@ -266,22 +239,38 @@ const AtalForm = function () {
 
                   <Form.Group controlId="address">
                     <Form.Label>Adres: *</Form.Label>
-                    <Form.Control type="text" name="address" onChange={handleChange} />
+                    <Form.Control
+                      type="text"
+                      name="address"
+                      onChange={handleChange}
+                    />
                   </Form.Group>
 
                   <Form.Group controlId="projectno">
                     <Form.Label>Numer budowlany: *</Form.Label>
-                    <Form.Control type="text" name="projectno" onChange={handleChange} />
+                    <Form.Control
+                      type="text"
+                      name="projectno"
+                      onChange={handleChange}
+                    />
                   </Form.Group>
 
                   <Form.Group controlId="fullname">
                     <Form.Label>Imię i nazwisko: *</Form.Label>
-                    <Form.Control type="text" name="fullname" onChange={handleChange} />
+                    <Form.Control
+                      type="text"
+                      name="fullname"
+                      onChange={handleChange}
+                    />
                   </Form.Group>
 
                   <Form.Group controlId="phone">
                     <Form.Label>Kontakt telefoniczny: *</Form.Label>
-                    <Form.Control type="text" name="phone" onChange={handleChange} />
+                    <Form.Control
+                      type="text"
+                      name="phone"
+                      onChange={handleChange}
+                    />
                     <Form.Text className="text-mute">
                       <div className="panel panel-default">
                         <FormErrors formErrors="placeholder" />
@@ -291,7 +280,11 @@ const AtalForm = function () {
 
                   <Form.Group controlId="email">
                     <Form.Label>Adres email: *</Form.Label>
-                    <Form.Control type="email" name="email" onChange={handleChange} />
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      onChange={handleChange}
+                    />
                     <Form.Text className="text-mute">
                       <div className="panel panel-default">
                         <FormErrors formErrors="placeholder" />
@@ -302,7 +295,10 @@ const AtalForm = function () {
                   <div>
                     <div className="mb-2">Kategoria problemu</div>
                     {issueCategories.map((option, index) => (
-                      <Form.Group controlId={`check${index}`} key={`check-${index}`}>
+                      <Form.Group
+                        controlId={`check${index}`}
+                        key={`check-${index}`}
+                      >
                         <Form.Check
                           className="d-flex justify-content-start"
                           onChange={handleChange}
@@ -315,26 +311,48 @@ const AtalForm = function () {
                   </div>
                   <Form.Group controlId="issueDesc">
                     <Form.Label>Opis usterki</Form.Label>
-                    <Form.Control as="textarea" rows={5} name="issueDesc" onChange={handleChange} maxLength={`${maxTextAreaLength}`} />
+                    <Form.Control
+                      as="textarea"
+                      rows={5}
+                      name="issueDesc"
+                      onChange={handleChange}
+                      maxLength={`${maxTextAreaLength}`}
+                    />
                     {textAreaCounter()}
                   </Form.Group>
 
                   <Form.Group controlId="customerDate">
                     <Form.Label>Data odbioru lokalu</Form.Label>
-                    <Form.Control type="date" name="customerDate" onChange={handleChange} />
+                    <Form.Control
+                      type="date"
+                      name="customerDate"
+                      onChange={handleChange}
+                    />
                   </Form.Group>
 
                   <Form.Group controlId="file">
                     <Form.Label>Dodaj plik</Form.Label>
-                    <Form.Control type="file" name="file1" onChange={handleChange} />
+                    <Form.Control
+                      type="file"
+                      name="file1"
+                      onChange={handleChange}
+                    />
                   </Form.Group>
                   <Form.Group controlId="file">
                     <Form.Label>Dodaj plik 2</Form.Label>
-                    <Form.Control type="file" name="file2" onChange={handleChange} />
+                    <Form.Control
+                      type="file"
+                      name="file2"
+                      onChange={handleChange}
+                    />
                   </Form.Group>
                   <Form.Group controlId="file">
                     <Form.Label>Dodaj plik 3</Form.Label>
-                    <Form.Control type="file" name="file3" onChange={handleChange} />
+                    <Form.Control
+                      type="file"
+                      name="file3"
+                      onChange={handleChange}
+                    />
                   </Form.Group>
 
                   <Card className="mb-1">
@@ -344,20 +362,45 @@ const AtalForm = function () {
                         Deweloper informuje, że :
                         <br />
                         <br />
-                        - Przed dokonaniem naprawy gwarancyjnej lokator będzie zobligowany udostępnić lokal Inwestorowi/Wykonawcy (w godzinach: 8:00 - 16:00 od poniedziałku do piątku) celem przeprowadzenia wizji lokalnej mającej na celu stwierdzenia zasadności zgłoszenia, określenia technologii i zakwalifikowania do prac gwarancyjnych. W przypadku uniemożliwienia Inwestorowi/Wykonawcy dostępu do lokalu zachodzą okoliczności zwolnienia z odpowiedzialności z tytułu usunięcia wady/ usterki, której dotyczyło zgłoszenie.
+                        - Przed dokonaniem naprawy gwarancyjnej lokator będzie
+                        zobligowany udostępnić lokal Inwestorowi/Wykonawcy (w
+                        godzinach: 8:00 - 16:00 od poniedziałku do piątku) celem
+                        przeprowadzenia wizji lokalnej mającej na celu
+                        stwierdzenia zasadności zgłoszenia, określenia
+                        technologii i zakwalifikowania do prac gwarancyjnych. W
+                        przypadku uniemożliwienia Inwestorowi/Wykonawcy dostępu
+                        do lokalu zachodzą okoliczności zwolnienia z
+                        odpowiedzialności z tytułu usunięcia wady/ usterki,
+                        której dotyczyło zgłoszenie.
                         <br />
                         <br />
-                        - W przypadku gdy Lokator usunie wadę/usterkę we własnym zakresie, bez jej odpowiedniego, zgłoszenia Zarządcy i Inwestorowi w żadnym wypadku Inwestor nie będzie odpowiedzialny za pokrycie kosztów usunięcia takiej wady.
+                        - W przypadku gdy Lokator usunie wadę/usterkę we własnym
+                        zakresie, bez jej odpowiedniego, zgłoszenia Zarządcy i
+                        Inwestorowi w żadnym wypadku Inwestor nie będzie
+                        odpowiedzialny za pokrycie kosztów usunięcia takiej
+                        wady.
                         <br />
                         <br />
-                        - W przypadku stwierdzenia nieuzasadnionego wezwania do usunięcia usterki, której przyczyna nie będzie leżała po stronie dewelopera (np. przez nieprzestrzeganie instrukcji użytkowania), deweloper zastrzega sobie prawo (na żądanie firmy wezwanej do usunięcia usterki) do obciążenia właściciela mieszkania kosztami nieuzasadnionego wezwania.
+                        - W przypadku stwierdzenia nieuzasadnionego wezwania do
+                        usunięcia usterki, której przyczyna nie będzie leżała po
+                        stronie dewelopera (np. przez nieprzestrzeganie
+                        instrukcji użytkowania), deweloper zastrzega sobie prawo
+                        (na żądanie firmy wezwanej do usunięcia usterki) do
+                        obciążenia właściciela mieszkania kosztami
+                        nieuzasadnionego wezwania.
                         <br />
-                        <br />
-                        - Wszelkie uszkodzenia zgłaszać od razu, a nie jak doprowadzą do dalszej degradacji elementu budynku, instalacji, mieszkania. W przeciwnym wypadku następuje utrata rękojmi.
+                        <br />- Wszelkie uszkodzenia zgłaszać od razu, a nie jak
+                        doprowadzą do dalszej degradacji elementu budynku,
+                        instalacji, mieszkania. W przeciwnym wypadku następuje
+                        utrata rękojmi.
                       </Card.Text>
                       <Card.Footer>
                         <Form.Group controlId="confirmTerms">
-                          <Form.Check label="Potwierdzam zapoznanie się z informacją dotyczącą zgłoszenia. *" name="confirmTerms" onChange={handleChange} />
+                          <Form.Check
+                            label="Potwierdzam zapoznanie się z informacją dotyczącą zgłoszenia. *"
+                            name="confirmTerms"
+                            onChange={handleChange}
+                          />
                         </Form.Group>
                       </Card.Footer>
                     </Card.Body>

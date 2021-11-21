@@ -1,8 +1,8 @@
-import Form from 'react-bootstrap/Form'
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
+import Form from 'react-bootstrap/Form'
 
-const SimpleSelector = (props) => {
+const SimpleSelector = props => {
   const { options, label, name, onChange, required } = props
 
   const optionsList = () => {
@@ -14,7 +14,11 @@ const SimpleSelector = (props) => {
   }
 
   SimpleSelector.propTypes = {
-    options: PropTypes.array.isRequired, label: PropTypes.string.isRequired, name: PropTypes.string.isRequired, onChange: PropTypes.func.isRequired, required: PropTypes.bool.isRequired
+    options: PropTypes.array.isRequired,
+    label: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    required: PropTypes.bool.isRequired
   }
 
   return (

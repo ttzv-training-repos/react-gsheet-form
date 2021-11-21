@@ -4,8 +4,9 @@
         "es2021": true
     },
     "extends": [
+        "eslint:recommended",
         "plugin:react/recommended",
-        "standard"
+        "plugin:prettier/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -14,10 +15,20 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "plugins": [
-        "react"
-    ],
+    "plugins": ["prettier", "react", "react-hooks", "simple-import-sort"],
     "rules": {
-        "no-unused-vars": "warn"
+        "prettier/prettier": [
+            "warn",
+            {
+              "endOfLine": "auto",
+              "trailingComma": "none",
+              "singleQuotes": true,
+              "semi": false
+            }
+          ],
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+        "no-unused-vars": "warn",
+        "react/prop-types": "warn"
     }
 }

@@ -1,5 +1,6 @@
 const investments = {
-  Warszawa: ['Marina I',
+  Warszawa: [
+    'Marina I',
     'Marina II',
     'Marina III',
     'Marina IV',
@@ -20,7 +21,8 @@ const investments = {
     'Wilanów etap I',
     'Wilanów etap II',
     'Wilanów etap III',
-    'Apartamenty Ostródzka I'],
+    'Apartamenty Ostródzka I'
+  ],
   Poznań: ['ATAL Malta', 'Milczańska I', 'Milczańska II', 'Chwaliszewo']
 }
 
