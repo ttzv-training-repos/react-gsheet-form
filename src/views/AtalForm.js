@@ -9,13 +9,13 @@ import Form from 'react-bootstrap/Form'
 import { NotificationManager } from 'react-notifications'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-import { FormErrors } from './components/FormErrors'
-import SimpleSelector from './components/SimpleSelector'
-import { issueCategories } from './constants/appConstants'
-import { baseSheetURL, maxTextAreaLength } from './constants/config'
-import app from './constants/Fire'
-import investments from './constants/investments'
-import atalFormSchema from './schemas/atalFormSchema'
+import FormErrors from '../components/FormErrors'
+import SimpleSelector from '../components/SimpleSelector'
+import { issueCategories } from '../constants/appConstants'
+import { baseSheetURL, maxTextAreaLength } from '../constants/config'
+import app from '../constants/Fire'
+import investments from '../constants/investments'
+import atalFormSchema from '../schemas/atalFormSchema'
 
 const override = css`
   display: block;
@@ -30,14 +30,15 @@ const AtalForm = function () {
     city: '',
     project: '',
     address: '',
-    projectno: '',
+    projectNo: '',
     fullname: '',
     phone: '',
     email: '',
     issueCategory: [],
     issueDesc: '',
     customerDate: '',
-    files: []
+    files: [],
+    confirmTerms: false,
   }
 
   const generateUrl = params => {
@@ -97,7 +98,7 @@ const AtalForm = function () {
         'fileurl',
         'file1',
         'file2',
-        'file3'
+        'file3',
       ])
       fetch(url, { mode: 'no-cors' }).then(() => {
         this.setState({ loading: false })
@@ -107,75 +108,8 @@ const AtalForm = function () {
     })
   }
 
-  // handleChange = (e) => {
-  //   const { name } = e.target
-  //   let { value } = e.target
-  //   if (e.target.type === 'file') {
-  //     const tablefile = this.state.file
-  //     value = e.target.files[0]
-  //     if (value.size > maxFileSizeBytes) {
-  //       alert('Maksymalny rozmiar pliku to 10MB')
-  //       e.target.value = null
-  //       console.log(e.target.files)
-  //       return
-  //     }
-  //     if (e.target.name === 'file1') {
-  //       tablefile.file1 = value
-  //     }
-  //     if (e.target.name === 'file2') {
-  //       tablefile.file2 = value
-  //     }
-  //     if (e.target.name === 'file3') {
-  //       tablefile.file3 = value
-  //     }
-  //     this.setState({ [this.state.file]: tablefile })
-  //   } else {
-  //     this.setState({ [name]: value }, () => { this.validateField(name, value) })
-  //   }
-  // }
-
-  // const validateField = (fieldName, value) => {
-  //   const fieldValidationErrors = this.state.formErrors
-  //   let { emailValid } = this.state
-  //   let { phoneValid } = this.state
-
-  //   switch (fieldName) {
-  //     case 'email':
-  //       emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-  //       fieldValidationErrors.email = emailValid ? '' : ' Niepoprawny adres'
-  //       break
-  //     case 'phone':
-  //       const regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{1,6}$/im
-  //       phoneValid = value.match(regex)
-  //       fieldValidationErrors.phone = phoneValid ? '' : ' Niepoprawny numer'
-  //       break
-  //     default:
-  //       break
-  //   }
-  //   this.setState({
-  //     formErrors: fieldValidationErrors,
-  //     emailValid,
-  //     phoneValid
-  //   }, this.validateForm)
-  // }
-
-  // const validateForm = () => {
-  //   this.setState({ formValid: this.state.emailValid && this.state.phoneValid })
-  // }
-
-  // const checkboxHandler = (e) => {
-  //   const { value } = e.target
-  //   const { issues } = this.state
-  //   if (issues.includes(value)) {
-  //     issues.splice(issues.indexOf(value), 1)
-  //   } else {
-  //     issues.push(value)
-  //   }
-  //   this.setState({ issues })
-  // }
-
   const textAreaCounter = () => {
-    const currentLength = formRef.current?.values?.issueDesc.length
+    const currentLength = formRef.current?.values.issueDesc.length || 0
     if (currentLength === maxTextAreaLength) {
       return (
         <small className="form-text text-mute">
@@ -183,7 +117,6 @@ const AtalForm = function () {
         </small>
       )
     }
-
     return (
       <small className="form-text text-muted">
         {currentLength}/{maxTextAreaLength}
@@ -191,6 +124,9 @@ const AtalForm = function () {
     )
   }
 
+  const handleSubmit = values => {
+    console.log(values)
+  }
   let className = ''
   let className2 = 'my-5 d-none'
   if (!isFormVisible) {
@@ -206,9 +142,10 @@ const AtalForm = function () {
           </div>
           <Formik
             initialValues={initialValues}
-            onSubmit={values => console.log(values)}
+            onSubmit={handleSubmit}
             isInitialValid={false}
             innerRef={formRef}
+            validationSchema={atalFormSchema}
           >
             {({
               handleChange,
@@ -218,8 +155,11 @@ const AtalForm = function () {
               values,
               touched,
               isValid,
-              errors
+              errors,
             }) => {
+              const formError = field => {
+                return touched[field] && errors[field] ? errors[field] : ''
+              }
               return (
                 <Form onSubmit={handleSubmit}>
                   <SimpleSelector
@@ -227,6 +167,8 @@ const AtalForm = function () {
                     name="city"
                     label="Miasto: *"
                     onChange={handleChange}
+                    onBlur={handleBlur}
+                    errors={<FormErrors errors={formError('city')} />}
                   />
 
                   <SimpleSelector
@@ -235,6 +177,8 @@ const AtalForm = function () {
                     name="project"
                     label="Inwestycja: *"
                     onChange={handleChange}
+                    onBlur={handleBlur}
+                    errors={<FormErrors errors={formError('project')} />}
                   />
 
                   <Form.Group controlId="address">
@@ -243,7 +187,9 @@ const AtalForm = function () {
                       type="text"
                       name="address"
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
+                    <FormErrors errors={formError('address')} />
                   </Form.Group>
 
                   <Form.Group controlId="projectno">
@@ -252,7 +198,9 @@ const AtalForm = function () {
                       type="text"
                       name="projectno"
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
+                    <FormErrors errors={formError('projectno')} />
                   </Form.Group>
 
                   <Form.Group controlId="fullname">
@@ -261,7 +209,9 @@ const AtalForm = function () {
                       type="text"
                       name="fullname"
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
+                    <FormErrors errors={formError('fullname')} />
                   </Form.Group>
 
                   <Form.Group controlId="phone">
@@ -270,12 +220,9 @@ const AtalForm = function () {
                       type="text"
                       name="phone"
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
-                    <Form.Text className="text-mute">
-                      <div className="panel panel-default">
-                        <FormErrors formErrors="placeholder" />
-                      </div>
-                    </Form.Text>
+                    <FormErrors errors={formError('phone')} />
                   </Form.Group>
 
                   <Form.Group controlId="email">
@@ -284,12 +231,9 @@ const AtalForm = function () {
                       type="email"
                       name="email"
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
-                    <Form.Text className="text-mute">
-                      <div className="panel panel-default">
-                        <FormErrors formErrors="placeholder" />
-                      </div>
-                    </Form.Text>
+                    <FormErrors errors={formError('email')} />
                   </Form.Group>
 
                   <div>
@@ -302,12 +246,14 @@ const AtalForm = function () {
                         <Form.Check
                           className="d-flex justify-content-start"
                           onChange={handleChange}
+                          onBlur={handleBlur}
                           label={option}
                           name="issueCategory"
                           value={option}
                         />
                       </Form.Group>
                     ))}
+                    <FormErrors errors={formError('issueCategory')} />
                   </div>
                   <Form.Group controlId="issueDesc">
                     <Form.Label>Opis usterki</Form.Label>
@@ -316,9 +262,13 @@ const AtalForm = function () {
                       rows={5}
                       name="issueDesc"
                       onChange={handleChange}
+                      onBlur={handleBlur}
                       maxLength={`${maxTextAreaLength}`}
                     />
-                    {textAreaCounter()}
+                    <div className="d-flex align-items-center justify-content-between">
+                      <FormErrors errors={formError('issueDesc')} />
+                      {textAreaCounter()}
+                    </div>
                   </Form.Group>
 
                   <Form.Group controlId="customerDate">
@@ -327,7 +277,9 @@ const AtalForm = function () {
                       type="date"
                       name="customerDate"
                       onChange={handleChange}
+                      onBlur={handleBlur}
                     />
+                    <FormErrors errors={formError('customerDate')} />
                   </Form.Group>
 
                   <Form.Group controlId="file">
@@ -359,7 +311,7 @@ const AtalForm = function () {
                     <Card.Body>
                       <Card.Title>Informacje</Card.Title>
                       <Card.Text className="card-info">
-                        Deweloper informuje, że :
+                        Deweloper informuje, że:
                         <br />
                         <br />
                         - Przed dokonaniem naprawy gwarancyjnej lokator będzie
@@ -400,14 +352,27 @@ const AtalForm = function () {
                             label="Potwierdzam zapoznanie się z informacją dotyczącą zgłoszenia. *"
                             name="confirmTerms"
                             onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={true}
                           />
+                          <FormErrors errors={errors.confirmTerms} />
                         </Form.Group>
                       </Card.Footer>
                     </Card.Body>
                   </Card>
 
                   <div className="d-flex align-items-center justify-content-between">
-                    <Button variant="primary" type="submit">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      disabled={false}
+                      onClick={e => {
+                        console.log(values)
+                        console.log(touched)
+                        console.log('errors', errors)
+                        console.log('valid', isValid)
+                      }}
+                    >
                       Wyślij zgłoszenie
                     </Button>
                     <ClipLoader loading={isLoading} css={override} size={30} />

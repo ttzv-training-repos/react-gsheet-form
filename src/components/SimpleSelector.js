@@ -3,7 +3,7 @@ import React from 'react'
 import Form from 'react-bootstrap/Form'
 
 const SimpleSelector = props => {
-  const { options, label, name, onChange, required } = props
+  const { options, label, name, onChange, onBlur, errors } = props
 
   const optionsList = () => {
     if (options) {
@@ -14,11 +14,12 @@ const SimpleSelector = props => {
   }
 
   SimpleSelector.propTypes = {
-    options: PropTypes.array.isRequired,
+    options: PropTypes.array,
     label: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
-    required: PropTypes.bool.isRequired
+    onBlur: PropTypes.func.isRequired,
+    errors: PropTypes.node.isRequired
   }
 
   return (
@@ -29,11 +30,12 @@ const SimpleSelector = props => {
         size="md"
         name={name}
         onChange={onChange}
-        required={required}
+        onBlur={onBlur}
       >
         <option />
         {optionsList()}
       </Form.Control>
+      {errors}
     </Form.Group>
   )
 }
