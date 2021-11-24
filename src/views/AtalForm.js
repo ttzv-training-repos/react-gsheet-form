@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form'
 import { NotificationManager } from 'react-notifications'
 import ClipLoader from 'react-spinners/ClipLoader'
 
+import FormDropzone from '../components/FormDropzone'
 import FormErrors from '../components/FormErrors'
 import SimpleSelector from '../components/SimpleSelector'
 import { issueCategories } from '../constants/appConstants'
@@ -127,6 +128,7 @@ const AtalForm = function () {
   const handleSubmit = values => {
     console.log(values)
   }
+
   let className = ''
   let className2 = 'my-5 d-none'
   if (!isFormVisible) {
@@ -156,6 +158,7 @@ const AtalForm = function () {
               touched,
               isValid,
               errors,
+              setFieldValue,
             }) => {
               const formError = field => {
                 return touched[field] && errors[field] ? errors[field] : ''
@@ -165,7 +168,7 @@ const AtalForm = function () {
                   <SimpleSelector
                     options={Object.keys(investments)}
                     name="city"
-                    label="Miasto: *"
+                    label="Miasto:"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     errors={<FormErrors errors={formError('city')} />}
@@ -175,14 +178,14 @@ const AtalForm = function () {
                     options={investments[values.city]}
                     disabled={values.city === ''}
                     name="project"
-                    label="Inwestycja: *"
+                    label="Inwestycja:"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     errors={<FormErrors errors={formError('project')} />}
                   />
 
                   <Form.Group controlId="address">
-                    <Form.Label>Adres: *</Form.Label>
+                    <Form.Label>Adres:</Form.Label>
                     <Form.Control
                       type="text"
                       name="address"
@@ -193,7 +196,7 @@ const AtalForm = function () {
                   </Form.Group>
 
                   <Form.Group controlId="projectno">
-                    <Form.Label>Numer budowlany: *</Form.Label>
+                    <Form.Label>Numer budowlany:</Form.Label>
                     <Form.Control
                       type="text"
                       name="projectno"
@@ -204,7 +207,7 @@ const AtalForm = function () {
                   </Form.Group>
 
                   <Form.Group controlId="fullname">
-                    <Form.Label>Imię i nazwisko: *</Form.Label>
+                    <Form.Label>Imię i nazwisko:</Form.Label>
                     <Form.Control
                       type="text"
                       name="fullname"
@@ -215,7 +218,7 @@ const AtalForm = function () {
                   </Form.Group>
 
                   <Form.Group controlId="phone">
-                    <Form.Label>Kontakt telefoniczny: *</Form.Label>
+                    <Form.Label>Kontakt telefoniczny:</Form.Label>
                     <Form.Control
                       type="text"
                       name="phone"
@@ -226,7 +229,7 @@ const AtalForm = function () {
                   </Form.Group>
 
                   <Form.Group controlId="email">
-                    <Form.Label>Adres email: *</Form.Label>
+                    <Form.Label>Adres email:</Form.Label>
                     <Form.Control
                       type="email"
                       name="email"
@@ -282,29 +285,10 @@ const AtalForm = function () {
                     <FormErrors errors={formError('customerDate')} />
                   </Form.Group>
 
-                  <Form.Group controlId="file">
-                    <Form.Label>Dodaj plik</Form.Label>
-                    <Form.Control
-                      type="file"
-                      name="file1"
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="file">
-                    <Form.Label>Dodaj plik 2</Form.Label>
-                    <Form.Control
-                      type="file"
-                      name="file2"
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="file">
-                    <Form.Label>Dodaj plik 3</Form.Label>
-                    <Form.Control
-                      type="file"
-                      name="file3"
-                      onChange={handleChange}
-                    />
+                  <Form.Group controlId="files">
+                    <Form.Label>Załącz pliki</Form.Label>
+                    <small> (max 10 MB / 3 pliki) </small>
+                    <FormDropzone name="files" setFieldValue={setFieldValue} />
                   </Form.Group>
 
                   <Card className="mb-1">
