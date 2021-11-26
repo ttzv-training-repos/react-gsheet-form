@@ -23,7 +23,9 @@ const atalFormSchema = Yup.object().shape({
       'Wprowadź poprawny numer telefonu'
     )
     .required('Uzupełnij telefon kontaktowy'),
-  email: Yup.string().email().required('Uzupełnij email'),
+  email: Yup.string()
+    .email('Podaj poprawny adres email')
+    .required('Uzupełnij email'),
   customerDate: Yup.string().required('Wybierz datę odbioru lokalu'),
   files: Yup.array(),
   issueCategory: Yup.array().min(1, 'Wybierz kategorię problemu'),

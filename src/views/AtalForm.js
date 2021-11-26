@@ -1,8 +1,9 @@
 import './AtalForm.css'
 
 import { css } from '@emotion/core'
+import axios from 'axios'
 import { Formik } from 'formik'
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form'
@@ -13,8 +14,7 @@ import FormDropzone from '../components/FormDropzone'
 import FormErrors from '../components/FormErrors'
 import SimpleSelector from '../components/SimpleSelector'
 import { issueCategories } from '../constants/appConstants'
-import { baseSheetURL, maxTextAreaLength } from '../constants/config'
-import app from '../constants/Fire'
+import { maxTextAreaLength, proxyURL } from '../constants/config'
 import investments from '../constants/investments'
 import atalFormSchema from '../schemas/atalFormSchema'
 
@@ -26,6 +26,7 @@ const AtalForm = function () {
   const [isFormVisible, setFormVisible] = useState(true)
   const [isLoading, setLoading] = useState(false)
   const formRef = useRef()
+  const formData = useMemo(() => new FormData())
 
   const initialValues = {
     city: '',
@@ -40,73 +41,6 @@ const AtalForm = function () {
     customerDate: '',
     files: [],
     confirmTerms: false,
-  }
-
-  const generateUrl = params => {
-    const paramsString = params.map(p => `${p}=${this.state[p]}`).join('&')
-    return `${baseSheetURL}${paramsString}`
-  }
-
-  const getUrl = async (item, i) => {
-    const storage = app.storage()
-    const storageRef = storage.ref()
-    const number = Math.round(Math.random() * 1000000000)
-    const fileref = storageRef.child(number.toString())
-    let extension = ''
-    if (item.file1 != null) {
-      extension = `file1.${item.file1.name.split('.').pop()}`
-      await fileref.child(extension).put(item.file1)
-      this.setState({ file1: extension })
-    }
-    if (item.file2 != null) {
-      extension = `file2.${item.file2.name.split('.').pop()}`
-      await fileref.child(extension).put(item.file2)
-      this.setState({ file2: extension })
-    }
-    if (item.file3 != null) {
-      extension = `file3.${item.file3.name.split('.').pop()}`
-      await fileref.child(extension).put(item.file3)
-      this.setState({ file3: extension })
-    }
-
-    return number
-  }
-
-  const firebaseUpload = async pliki => {
-    const t = false
-    const filesurl = this.state.fileurl
-    const files = this.state.file
-    return this.getUrl(files)
-  }
-
-  const onFormSubmit = e => {
-    this.setState({ formValid: false }) // to tylko blokuje przycisk po jego kliknięciu :)
-    this.setState({ loading: true })
-    e.preventDefault()
-    this.firebaseUpload(this.state.file).then(fileurl => {
-      this.setState({ fileurl })
-      const url = this.generateUrl([
-        'city',
-        'project',
-        'address',
-        'projectno',
-        'fullname',
-        'phone',
-        'email',
-        'issueCategory',
-        'issueDesc',
-        'customerDate',
-        'fileurl',
-        'file1',
-        'file2',
-        'file3',
-      ])
-      fetch(url, { mode: 'no-cors' }).then(() => {
-        this.setState({ loading: false })
-        NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 2000)
-        this.setState({ formShow: false })
-      })
-    })
   }
 
   const textAreaCounter = () => {
@@ -126,7 +60,28 @@ const AtalForm = function () {
   }
 
   const handleSubmit = values => {
-    console.log(values)
+    setLoading(true)
+    const { files, ...rest } = values
+    //populate formdata with fields
+    for (let value in rest) {
+      formData.append(value, values[value])
+    }
+
+    //populate files
+    files.forEach(file => formData.append('files', file))
+
+    axios
+      .post(proxyURL, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(response => {
+        setLoading(false)
+        NotificationManager.success('Zgłoszenie wysłane', 'Wysłano', 4000)
+        setFormVisible(false)
+        formRef.current.resetForm()
+      })
   }
 
   let className = ''
@@ -158,13 +113,15 @@ const AtalForm = function () {
               touched,
               isValid,
               errors,
+              isSubmitting,
+              dirty,
               setFieldValue,
             }) => {
               const formError = field => {
                 return touched[field] && errors[field] ? errors[field] : ''
               }
               return (
-                <Form onSubmit={handleSubmit}>
+                <Form onSubmit={handleSubmit} className={className}>
                   <SimpleSelector
                     options={Object.keys(investments)}
                     name="city"
@@ -339,7 +296,7 @@ const AtalForm = function () {
                             onBlur={handleBlur}
                             value={true}
                           />
-                          <FormErrors errors={errors.confirmTerms} />
+                          <FormErrors errors={formError('confirmTerms')} />
                         </Form.Group>
                       </Card.Footer>
                     </Card.Body>
@@ -349,13 +306,9 @@ const AtalForm = function () {
                     <Button
                       variant="primary"
                       type="submit"
-                      disabled={false}
-                      onClick={e => {
-                        console.log(values)
-                        console.log(touched)
-                        console.log('errors', errors)
-                        console.log('valid', isValid)
-                      }}
+                      disabled={
+                        !(isValid && dirty && !isLoading) || isSubmitting
+                      }
                     >
                       Wyślij zgłoszenie
                     </Button>
